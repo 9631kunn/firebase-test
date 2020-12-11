@@ -11,15 +11,31 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
+db.settings({
+  timestampsInSnapshots: true,
+});
 const collection = db.collection("messages");
 
-collection
-  .add({
-    message: "test",
-  })
-  .then((doc) => {
-    console.log(`${doc.id} added`);
-  })
-  .catch((error) => {
-    console.log(error);
+const d = document;
+
+{
+  const message = d.querySelector("#message");
+  const form = d.querySelector("form");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    collection
+      .add({
+        message: message.value,
+      })
+      .then((doc) => {
+        console.log(`${doc.id} added`);
+        message.value = "";
+        message.focus();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   });
+
+  message.focus();
+}
