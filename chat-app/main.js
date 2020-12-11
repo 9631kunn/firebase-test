@@ -38,20 +38,24 @@ const d = document;
   // add
   form.addEventListener("submit", (e) => {
     e.preventDefault();
+
+    const val = message.value.trim();
+    if (val === "") return;
+
+    const li = document.createElement("li");
+    li.textContent = message.value;
+    messages.appendChild(li);
+
+    message.value = "";
+    message.focus();
+
     collection
       .add({
-        message: message.value,
+        message: val,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       })
       .then((doc) => {
         console.log(`${doc.id} added`);
-
-        const li = document.createElement("li");
-        li.textContent = message.value;
-        messages.appendChild(li);
-
-        message.value = "";
-        message.focus();
       })
       .catch((error) => {
         console.log(error);
