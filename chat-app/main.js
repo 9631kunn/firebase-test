@@ -24,13 +24,16 @@ const d = document;
   const form = d.querySelector("form");
 
   // index
-  collection.get().then((snapshot) => {
-    snapshot.forEach((doc) => {
-      const li = document.createElement("li");
-      li.textContent = doc.data().message;
-      messages.appendChild(li);
+  collection
+    .orderBy("createdAt")
+    .get()
+    .then((snapshot) => {
+      snapshot.forEach((doc) => {
+        const li = document.createElement("li");
+        li.textContent = doc.data().message;
+        messages.appendChild(li);
+      });
     });
-  });
 
   // add
   form.addEventListener("submit", (e) => {
@@ -38,9 +41,15 @@ const d = document;
     collection
       .add({
         message: message.value,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       })
       .then((doc) => {
         console.log(`${doc.id} added`);
+
+        const li = document.createElement("li");
+        li.textContent = message.value;
+        messages.appendChild(li);
+
         message.value = "";
         message.focus();
       })
