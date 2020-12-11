@@ -19,8 +19,20 @@ const collection = db.collection("messages");
 const d = document;
 
 {
+  const messages = d.querySelector("#messages");
   const message = d.querySelector("#message");
   const form = d.querySelector("form");
+
+  // index
+  collection.get().then((snapshot) => {
+    snapshot.forEach((doc) => {
+      const li = document.createElement("li");
+      li.textContent = doc.data().message;
+      messages.appendChild(li);
+    });
+  });
+
+  // add
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     collection
